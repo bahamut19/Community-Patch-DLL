@@ -1,7 +1,9 @@
-print("This is the modded EnemyUnitPanel from CBP")
+print("This is the modded EnemyUnitPanel from VP")
+
 -------------------------------------------------
 -- Enemy Unit Panel Screen 
 -------------------------------------------------
+
 include( "IconSupport" );
 include( "InstanceManager" );
 
@@ -49,6 +51,7 @@ function SetName(name)
     end
 end
 --------------------------------------------------------------------------------
+-- Refresh City portrait and name
 --------------------------------------------------------------------------------
 function UpdateCityPortrait( pCity )
 
@@ -61,8 +64,6 @@ function UpdateCityPortrait( pCity )
 	local pPlayer = Players[playerID];
     local thisCivType = PreGame.GetCivilization( playerID );
     local thisCiv = GameInfo.Civilizations[thisCivType];
-
-	--print("thisCiv.AlphaIconAtlas:"..tostring(thisCiv.AlphaIconAtlas))
 
 	local textureOffset, textureAtlas = IconLookup( thisCiv.PortraitIndex, 32, thisCiv.AlphaIconAtlas );
 	Controls.UnitIcon:SetTexture( textureAtlas );
@@ -92,7 +93,7 @@ function UpdateUnitPortrait( pUnit )
 
 	local name = pUnit:GetName();
 	SetName(name);
-		
+
 	local flagOffset, flagAtlas = UI.GetUnitFlagIcon(pUnit);
 
 	local textureOffset, textureSheet = IconLookup( flagOffset, 32, flagAtlas );				
@@ -114,7 +115,7 @@ function UpdateUnitPortrait( pUnit )
 	if textureOffset == nil then
 		textureSheet = defaultErrorTextureSheet;
 		textureOffset = nullOffset;
-	end				
+	end
 	Controls.UnitPortrait:SetTexture(textureSheet);
 	Controls.UnitPortrait:SetTextureOffset(textureOffset);
 end
