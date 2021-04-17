@@ -2382,47 +2382,50 @@ int CvDealAI::GetOpenBordersValue(bool bFromMe, PlayerTypes eOtherPlayer, bool b
 			iItemValue /= 100;
 		}
 
-#if defined(MOD_BALANCE_FLIPPED_TOURISM_MODIFIER_OPEN_BORDERS)
-		if (GetPlayer()->GetCulture()->GetTourism() / 100 > 0)
+		if (MOD_BALANCE_FLIPPED_TOURISM_MODIFIER_OPEN_BORDERS)
 		{
-			// The civ we need influence on the most should ALWAYS be included
-			if (GetPlayer()->GetCulture()->GetCivLowestInfluence(false /*bCheckOpenBorders*/) == eOtherPlayer)
+			if (GetPlayer()->GetCulture()->GetTourism() / 100 > 0)
 			{
-				iItemValue *= 50;
-				iItemValue /= 100;
-			}
-
-			// If have influence over half the civs, want OB with the other half
-			if (GetPlayer()->GetCulture()->GetNumCivsToBeInfluentialOn() <= GetPlayer()->GetCulture()->GetNumCivsInfluentialOn())
-			{
-				if (GetPlayer()->GetCulture()->GetInfluenceLevel(eOtherPlayer) < INFLUENCE_LEVEL_INFLUENTIAL)
+				// The civ we need influence on the most should ALWAYS be included
+				if (GetPlayer()->GetCulture()->GetCivLowestInfluence(false /*bCheckOpenBorders*/) == eOtherPlayer)
 				{
 					iItemValue *= 50;
 					iItemValue /= 100;
 				}
-			}
-		}
-#else
-		// Do we think he's going for culture victory? If we're contesting this, don't take his open borders!
-		if (pDiploAI->IsCompetingForVictory() && pDiploAI->GetCivOpinion(eOtherPlayer) != CIV_OPINION_ALLY && pDiploAI->GetCivApproach(eOtherPlayer) != CIV_APPROACH_FRIENDLY)
-		{
-			CvPlayer &kOtherPlayer = GET_PLAYER(eOtherPlayer);
-			if (kOtherPlayer.GetCulture()->GetTourism() / 100 > 0 && (kOtherPlayer.GetCulture()->GetInfluenceOn(GetPlayer()->GetID()) < INFLUENCE_LEVEL_INFLUENTIAL))
-			{
-				// Fiercely competitive over victory
-				if (pDiploAI->GetVictoryBlockLevel(eOtherPlayer) >= BLOCK_LEVEL_STRONG || pDiploAI->GetVictoryDisputeLevel(eOtherPlayer) >= DISPUTE_LEVEL_STRONG)
-				{
-					return INT_MAX;
-				}
 
-				// If he has influence over half the civs, want to block OB with the other half
-				if (kOtherPlayer.GetCulture()->GetNumCivsToBeInfluentialOn() < kOtherPlayer.GetCulture()->GetNumCivsInfluentialOn())
+				// If have influence over half the civs, want OB with the other half
+				if (GetPlayer()->GetCulture()->GetNumCivsToBeInfluentialOn() <= GetPlayer()->GetCulture()->GetNumCivsInfluentialOn())
 				{
-					return INT_MAX;
+					if (GetPlayer()->GetCulture()->GetInfluenceLevel(eOtherPlayer) < INFLUENCE_LEVEL_INFLUENTIAL)
+					{
+						iItemValue *= 50;
+						iItemValue /= 100;
+					}
 				}
 			}
 		}
-#endif
+		else
+		{
+			// Do we think he's going for culture victory? If we're contesting this, don't take his open borders!
+			if (pDiploAI->IsCompetingForVictory() && pDiploAI->GetCivOpinion(eOtherPlayer) != CIV_OPINION_ALLY && pDiploAI->GetCivApproach(eOtherPlayer) != CIV_APPROACH_FRIENDLY)
+			{
+				CvPlayer &kOtherPlayer = GET_PLAYER(eOtherPlayer);
+				if (kOtherPlayer.GetCulture()->GetTourism() / 100 > 0 && (kOtherPlayer.GetCulture()->GetInfluenceOn(GetPlayer()->GetID()) < INFLUENCE_LEVEL_INFLUENTIAL))
+				{
+					// Fiercely competitive over victory
+					if (pDiploAI->GetVictoryBlockLevel(eOtherPlayer) >= BLOCK_LEVEL_STRONG || pDiploAI->GetVictoryDisputeLevel(eOtherPlayer) >= DISPUTE_LEVEL_STRONG)
+					{
+						return INT_MAX;
+					}
+
+					// If he has influence over half the civs, want to block OB with the other half
+					if (kOtherPlayer.GetCulture()->GetNumCivsToBeInfluentialOn() < kOtherPlayer.GetCulture()->GetNumCivsInfluentialOn())
+					{
+						return INT_MAX;
+					}
+				}
+			}
+		}
 
 		// Add 200 Gold for each of our artifacts they've stolen
 		if (pDiploAI->GetNumArtifactsEverDugUp(eOtherPlayer) > 0)
@@ -2538,47 +2541,50 @@ int CvDealAI::GetOpenBordersValue(bool bFromMe, PlayerTypes eOtherPlayer, bool b
 		}
 #endif
 
-#if defined(MOD_BALANCE_FLIPPED_TOURISM_MODIFIER_OPEN_BORDERS)
-		// Do we think he's going for culture victory? If we're contesting this, don't take his open borders!
-		if (pDiploAI->IsCompetingForVictory() && pDiploAI->GetCivOpinion(eOtherPlayer) != CIV_OPINION_ALLY && pDiploAI->GetCivApproach(eOtherPlayer) != CIV_APPROACH_FRIENDLY)
+		if (MOD_BALANCE_FLIPPED_TOURISM_MODIFIER_OPEN_BORDERS)
 		{
-			CvPlayer &kOtherPlayer = GET_PLAYER(eOtherPlayer);
-			if (kOtherPlayer.GetCulture()->GetTourism() / 100 > 0 && (kOtherPlayer.GetCulture()->GetInfluenceOn(GetPlayer()->GetID()) < INFLUENCE_LEVEL_INFLUENTIAL))
+			// Do we think he's going for culture victory? If we're contesting this, don't take his open borders!
+			if (pDiploAI->IsCompetingForVictory() && pDiploAI->GetCivOpinion(eOtherPlayer) != CIV_OPINION_ALLY && pDiploAI->GetCivApproach(eOtherPlayer) != CIV_APPROACH_FRIENDLY)
 			{
-				// Fiercely competitive over victory
-				if (pDiploAI->GetVictoryBlockLevel(eOtherPlayer) >= BLOCK_LEVEL_STRONG || pDiploAI->GetVictoryDisputeLevel(eOtherPlayer) >= DISPUTE_LEVEL_STRONG)
+				CvPlayer &kOtherPlayer = GET_PLAYER(eOtherPlayer);
+				if (kOtherPlayer.GetCulture()->GetTourism() / 100 > 0 && (kOtherPlayer.GetCulture()->GetInfluenceOn(GetPlayer()->GetID()) < INFLUENCE_LEVEL_INFLUENTIAL))
 				{
-					return INT_MAX;
-				}
+					// Fiercely competitive over victory
+					if (pDiploAI->GetVictoryBlockLevel(eOtherPlayer) >= BLOCK_LEVEL_STRONG || pDiploAI->GetVictoryDisputeLevel(eOtherPlayer) >= DISPUTE_LEVEL_STRONG)
+					{
+						return INT_MAX;
+					}
 
-				// If he has influence over half the civs, want to block OB with the other half
-				if (kOtherPlayer.GetCulture()->GetNumCivsToBeInfluentialOn() < kOtherPlayer.GetCulture()->GetNumCivsInfluentialOn())
-				{
-					return INT_MAX;
+					// If he has influence over half the civs, want to block OB with the other half
+					if (kOtherPlayer.GetCulture()->GetNumCivsToBeInfluentialOn() < kOtherPlayer.GetCulture()->GetNumCivsInfluentialOn())
+					{
+						return INT_MAX;
+					}
 				}
 			}
 		}
-#else
-		if (GetPlayer()->GetCulture()->GetTourism() / 100 > 0)
+		else
 		{
-			// The civ we need influence on the most should ALWAYS be included
-			if (GetPlayer()->GetCulture()->GetCivLowestInfluence(false) == eOtherPlayer)
+			if (GetPlayer()->GetCulture()->GetTourism() / 100 > 0)
 			{
-				iItemValue *= 200;
-				iItemValue /= 100;
-			}
-
-			// If have influence over half the civs, want OB with the other half
-			if (GetPlayer()->GetCulture()->GetNumCivsToBeInfluentialOn() <= GetPlayer()->GetCulture()->GetNumCivsInfluentialOn())
-			{
-				if (GetPlayer()->GetCulture()->GetInfluenceLevel(eOtherPlayer) < INFLUENCE_LEVEL_INFLUENTIAL)
+				// The civ we need influence on the most should ALWAYS be included
+				if (GetPlayer()->GetCulture()->GetCivLowestInfluence(false) == eOtherPlayer)
 				{
 					iItemValue *= 200;
 					iItemValue /= 100;
 				}
+
+				// If have influence over half the civs, want OB with the other half
+				if (GetPlayer()->GetCulture()->GetNumCivsToBeInfluentialOn() <= GetPlayer()->GetCulture()->GetNumCivsInfluentialOn())
+				{
+					if (GetPlayer()->GetCulture()->GetInfluenceLevel(eOtherPlayer) < INFLUENCE_LEVEL_INFLUENTIAL)
+					{
+						iItemValue *= 200;
+						iItemValue /= 100;
+					}
+				}
 			}
 		}
-#endif
 	}
 
 	// Are we trying to find the middle point between what we think this item is worth and what another player thinks it's worth?

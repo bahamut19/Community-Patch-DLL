@@ -246,7 +246,7 @@
 #define MOD_PSEUDO_NATURAL_WONDER					gCustomMods.isPSEUDO_NATURAL_WONDER()
 
 // Flips open borders to apply in opposite ways- you have to give open borders to gain the tourism bonus
-#define MOD_BALANCE_FLIPPED_TOURISM_MODIFIER_OPEN_BORDERS
+#define MOD_BALANCE_FLIPPED_TOURISM_MODIFIER_OPEN_BORDERS	(true)
 
 //Community Patch Info
 #define MOD_COMMUNITY_PATCH							gCustomMods.isCOMMUNITY_PATCH()
