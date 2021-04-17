@@ -24,27 +24,24 @@ local g_bWorldMouseOver = true;
 local g_bShowPanel = false;
 
 function SetName(name)
-	
+
 	name = Locale.ToUpper(name);
 
     local iNameLength = Locale.Length(name);
     if (iNameLength < 18) then
 	    Controls.UnitName:SetText(name);
-	    
 	    Controls.UnitName:SetHide(false);
 	    Controls.LongUnitName:SetHide(true);
 	    Controls.ReallyLongUnitName:SetHide(true);
-	    
+
     elseif (iNameLength < 23) then
 	    Controls.LongUnitName:SetText(name);
-	    
 	    Controls.UnitName:SetHide(true);
 	    Controls.LongUnitName:SetHide(false);
 	    Controls.ReallyLongUnitName:SetHide(true);
-	    
+
     else
 	    Controls.ReallyLongUnitName:SetText(name);
-	    
 	    Controls.UnitName:SetHide(true);
 	    Controls.LongUnitName:SetHide(true);
 	    Controls.ReallyLongUnitName:SetHide(false);
@@ -53,7 +50,7 @@ end
 --------------------------------------------------------------------------------
 -- Refresh City portrait and name
 --------------------------------------------------------------------------------
-function UpdateCityPortrait( pCity )
+function UpdateCityPortrait(pCity)
 
 	if pCity == nil then
 		return;
@@ -85,7 +82,7 @@ end
 --------------------------------------------------------------------------------
 -- Refresh Unit portrait and name
 --------------------------------------------------------------------------------
-function UpdateUnitPortrait( pUnit )
+function UpdateUnitPortrait(pUnit)
 
 	if pUnit == nil then
 		return;
@@ -126,31 +123,30 @@ end
 --------------------------------------------------------------------------------
 function UpdateUnitPromotions(pUnit)
 	local UnitPromotionKey = "UnitPromotion";
-	
+
 	--Clear Unit Promotions
 	local i = 1;
-	while(Controls[UnitPromotionKey..i] ~= nil) do
+	while (Controls[UnitPromotionKey..i] ~= nil) do
 		local promotionIcon = Controls[UnitPromotionKey..i];
 		promotionIcon:SetHide(true);
-	
 		i = i + 1;
 	end
-	
+
 	if pUnit then
 		--For each avail promotion, display the icon
 		for unitPromotion in GameInfo.UnitPromotions() do
 			local unitPromotionID = unitPromotion.ID;
-			if(pUnit:IsHasPromotion(unitPromotionID)) then
-				
+			if (pUnit:IsHasPromotion(unitPromotionID)) then
+
 				-- Get next available promotion button
 				local idx = 1;
 				local promotionIcon;
+
 				repeat
 					promotionIcon = Controls[UnitPromotionKey..idx];
 					idx = idx + 1;
-					
-				until(promotionIcon == nil or promotionIcon:IsHidden() == true);
-				
+				until (promotionIcon == nil or promotionIcon:IsHidden() == true);
+
 				if promotionIcon ~= nil then
 					IconHookup( unitPromotion.PortraitIndex, 32, unitPromotion.IconAtlas, promotionIcon );				
 					promotionIcon:SetHide(false);
@@ -165,17 +161,16 @@ end
 -- Refresh City stats
 --------------------------------------------------------------------------------
 function UpdateCityStats(pCity)
-	
+
 	-- Strength
 	local strength = math.floor(pCity:GetStrengthValue() / 100);
-	
+
 	strength = strength .. " [ICON_STRENGTH]";
 	Controls.UnitStrengthBox:SetHide(false);
 	Controls.UnitStatStrength:SetText(strength);
-	
+
 	Controls.UnitMovementBox:SetHide(true);
-	Controls.UnitRangedAttackBox:SetHide(true);	
-	
+	Controls.UnitRangedAttackBox:SetHide(true);
 end
 
 
@@ -183,33 +178,33 @@ end
 -- Refresh Unit stats
 --------------------------------------------------------------------------------
 function UpdateUnitStats(pUnit)
-	
+
 	-- Movement
 	local move_denominator = GameDefines["MOVE_DENOMINATOR"];
 	local max_moves = pUnit:MaxMoves() / move_denominator;
 	local szMoveStr = max_moves .. " [ICON_MOVES]";
-	
+
 	Controls.UnitStatMovement:SetText(szMoveStr);
 	Controls.UnitMovementBox:SetHide(false);
-	
+
 	-- Strength
     local strength = 0;
-    if(pUnit:GetDomainType() == DomainTypes.DOMAIN_AIR) then
+    if (pUnit:GetDomainType() == DomainTypes.DOMAIN_AIR) then
         strength = pUnit:GetBaseRangedCombatStrength();
     else
         strength = pUnit:GetBaseCombatStrength();
     end
-	if(strength > 0) then
+	if (strength > 0) then
 		strength = strength .. " [ICON_STRENGTH]";
 		Controls.UnitStrengthBox:SetHide(false);
 		Controls.UnitStatStrength:SetText(strength);
 	else
 		Controls.UnitStrengthBox:SetHide(true);
-	end		
-	
+	end
+
 	-- Ranged Strength
 	local iRangedStrength = 0;
-	if(pUnit:GetDomainType() ~= DomainTypes.DOMAIN_AIR) then
+	if (pUnit:GetDomainType() ~= DomainTypes.DOMAIN_AIR) then
 		iRangedStrength = pUnit:GetBaseRangedCombatStrength();
 	else
 		iRangedStrength = 0;
@@ -232,10 +227,10 @@ function GetFormattedText(strLocalizedText, iValue, bForMe, bPercent, strOptiona
 	
 	local strTextToReturn = "";
 	local strNumberPart = Locale.ToNumber(iValue, "#.#");
-	
+
 	if (bPercent) then
 		strNumberPart = strNumberPart .. "%";
-		
+
 		if (bForMe) then
 			if (iValue > 0) then
 				strNumberPart = "[COLOR_POSITIVE_TEXT]+" .. strNumberPart .. "[ENDCOLOR]";
@@ -249,7 +244,7 @@ function GetFormattedText(strLocalizedText, iValue, bForMe, bPercent, strOptiona
 				strNumberPart = "[COLOR_NEGATIVE_TEXT]+" .. strNumberPart .. "[ENDCOLOR]";
 			end
 		end
-		
+
 		-- Bullet for my side
 		if (bForMe) then
 			strNumberPart = strNumberPart .. "[]";
@@ -258,11 +253,11 @@ function GetFormattedText(strLocalizedText, iValue, bForMe, bPercent, strOptiona
 			strNumberPart = "[]" .. strNumberPart;
 		end
 	end
-	
+
 	if (strOptionalColor ~= nil) then
 		strNumberPart = strOptionalColor .. strNumberPart .. "[ENDCOLOR]";
 	end
-	
+
 	-- Formatting for my side
 	if (bForMe) then
 		strTextToReturn = " :  " .. strNumberPart;
@@ -270,9 +265,8 @@ function GetFormattedText(strLocalizedText, iValue, bForMe, bPercent, strOptiona
 	else
 		strTextToReturn = strNumberPart .. "  : ";
 	end
-	
+
 	return strTextToReturn;
-	
 end
 
 
